@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "weather-app-rn",
-    "slug": "weather-app-rn",
+    "name": "weather",
+    "slug": "weather",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.artu.weather.app"
+      "package": "andoid.package"
     },
     "web": {
       "favicon": "./assets/favicon.png"
