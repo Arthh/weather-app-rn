@@ -3,23 +3,46 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 
-import { colors } from '../../utils';
+import { colors } from '../../utils/index';
 
-import { WEATHER_API_KEY, WEATHER_BASE_URL } from 'react-native-dotenv'
+import { WEATHER_API_KEY, WEATHER_BASE_URL } from '@env'
 
 import WeatherInfo from '../../components/WeatherInfo';
 import UnitsPicker from '../../components/UnitsPicker';
 import ReloadIcon from '../../components/ReloadIcon';
 import WeatherDetails from '../../components/WeatherDetails';
 
-export default function Home() {
+export default function Home({ route }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [unitsSystem, setUnitsSystem] = useState('metric')
 
-  const load = async () => {
+  const { city } = route.params;
+
+  const loadWithCityName = async () => {
     setCurrentWeather(null)
     setErrorMessage(null)
+
+    try{
+    const WEATHER_API = `${WEATHER_BASE_URL}q=${city}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
+    
+    const response = await fetch(WEATHER_API);
+    const result = await response.json();
+      
+    if(response.ok){
+      setCurrentWeather(result)
+    } else {
+      setErrorMessage(result.message)
+      }
+    }catch(err){
+      setErrorMessage(err.message)
+    }
+  }
+
+  const loadWithPosition = async () => {
+    setCurrentWeather(null)
+    setErrorMessage(null)
+
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       
@@ -27,7 +50,6 @@ export default function Home() {
         setErrorMessage('Acess to localtion is needed to run the app!');
         return
       }
-
       const location = await Location.getCurrentPositionAsync();
       const { latitude, longitude } = location.coords;
 
@@ -41,15 +63,14 @@ export default function Home() {
       } else {
         setErrorMessage(result.message)
       }
-
-
     }catch(err){
       setErrorMessage(err.message)
     }
   }
 
   useEffect(() => {
-    load();
+    city ? loadWithCityName() : loadWithPosition()
+
   },[unitsSystem])
 
   if(currentWeather){
@@ -58,7 +79,7 @@ export default function Home() {
         <StatusBar style="auto" />
         <View style={styles.main}>
           <UnitsPicker unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} />
-          <ReloadIcon load={load} />
+          <ReloadIcon load={loadWithPosition} />
           <WeatherInfo currentWeather={currentWeather} />
         </View>
         <WeatherDetails currentWeather={currentWeather} unitsSystem={unitsSystem} />

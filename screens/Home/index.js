@@ -5,12 +5,13 @@ import { View, Text, StyleSheet } from 'react-native';
 import SearchArea from '../../components/SearchArea';
 import ListAllCities from '../../components/ListAllCities'
 
-const Home = () => {
+const Home = ({ navigation }) => {
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Text style={styles.screenTitle} > Search </Text>
-      <SearchArea />
+      <SearchArea navigation={navigation} />
       <ListAllCities />
     </View>
   );
@@ -18,7 +19,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    marginTop: 43,
   },
   screenTitle: {
     fontSize: 22,

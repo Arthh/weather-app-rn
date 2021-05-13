@@ -1,24 +1,50 @@
 import React from 'react';
+
 import { View, Text, StyleSheet, TextInput, TouchableOpacity   } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useState } from 'react/cjs/react.development';
 
+const SearchArea = ({ navigation }) => {
+  const [city, setCity] = useState();
 
-const SearchArea = () => {
+  const navigateToClimeWithCity = () => {
+    if(city.length === 0){
+      return alert('Escreva o nome da cidade!')
+    }
+    navigation.navigate('Clime', {
+      city: city
+    })
+  }
+
+  const navigateToClimeWithLocation = () => {
+    navigation.navigate('Clime', {
+      city: city
+    })
+  }
+
   return (
     <View style={styles.container}>
      <Text style={styles.screenTitle}> Type your location here:</Text>
-      <TextInput style={styles.inputCity} />
+      <TextInput 
+        style={styles.inputCity}
+        name="cityName"
+        value={city}
+        onChangeText={cityName => setCity(cityName)}
+      />
 
       <View style={styles.buttonArea}>
         <TouchableOpacity
           style={styles.submitTouch}
+          onPress={navigateToClimeWithCity}
         >
           <Text style={styles.textTouch}>Submit</Text>
         </TouchableOpacity>  
 
         <TouchableOpacity
           style={styles.submitTouch}
+          onPress={navigateToClimeWithLocation}
         >
-          <Text style={styles.textTouch}>ICon</Text>
+          <Text><MaterialIcons style={styles.textTouch} name="my-location" size={30} color="white" /></Text>
         </TouchableOpacity>  
         
       </View>
@@ -41,7 +67,8 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     borderRadius: 8,
-    marginTop: 10
+    marginTop: 10,
+    padding: 10
   },
   buttonArea: {
     width: '90%',
