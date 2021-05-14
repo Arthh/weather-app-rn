@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import ListOneCities from '../ListOneCities';
 
 const ListAllCities = () => {
+  const cities = useSelector(state => state.city.cities);
+  console.log(cities)
+
   return (
     <View style={styles.container}>
       <Text style={styles.containerText}> Previous Searches </Text>

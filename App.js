@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { Provider } from 'react-redux';
@@ -8,10 +8,10 @@ import Routes from './routes/routes'
 
 export default function App() {
   return (
-    <NavigationContainer>
-      {/* <Provider store={store}> */}
+    <Provider store={store}>
+      <NavigationContainer>
         <Routes />
-      {/* </Provider> */}
-    </NavigationContainer>
+      </NavigationContainer>
+    </Provider>
   );
 }

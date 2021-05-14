@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import * as Location from 'expo-location';
 
+import { fetchData } from '../../store/modules/City/actions';
 import { colors } from '../../utils/index';
 
-import { WEATHER_API_KEY, WEATHER_BASE_URL } from '@env'
+import { WEATHER_API_KEY, WEATHER_BASE_URL } from 'react-native-dotenv'
 
 import WeatherInfo from '../../components/WeatherInfo';
 import UnitsPicker from '../../components/UnitsPicker';
@@ -34,7 +35,7 @@ export default function Home({ route }) {
     
     const response = await fetch(WEATHER_API);
     const result = await response.json();
-      
+
     if(response.ok){
       setCurrentWeather(result)
     } else {
@@ -63,7 +64,7 @@ export default function Home({ route }) {
 
       const response = await fetch(WEATHER_API);
       const result = await response.json();
-      
+
       if(response.ok){
         setCurrentWeather(result)
       } else {
@@ -73,6 +74,8 @@ export default function Home({ route }) {
       setErrorMessage(err.message)
     }
   }
+
+  
 
   if(currentWeather){
     return (

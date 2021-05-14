@@ -1,25 +1,26 @@
-// import { all, takeLatest, select, call, put } from 'redux-saga/effects'
-// import { fetchData, fetchDataSuccess, fetchDataFailure } from './actions';
-// import { ActionTypes } from './types';
-// import api from '../../../services/api';
+import { all, takeLatest, put, select } from 'redux-saga/effects';
+import types from './types';
+import { fetchDataSuccess, fetchDataFailure } from './actions';
 
+function* checkCity({ payload }) {
+  const { city } = payload;
 
-// function* checkProductStock({ payload }) {
-//   const { product } = payload;
+  try{
+    const check = yield select(state => {
+      return state.city.cities.find(item => item.city === city.city)
+    });
 
-//   const currentQuantity = yield select(state => {
-//     return state.cart.items.find(item => item.product.id === product.id)?.quantity ?? 0;
-//   });
+    if(!check) {
+      yield put(fetchDataSuccess(city));
+    }else{
+      yield put(fetchDataFailure(true));
+    }
 
-//   const availableStockResponse = yield call(api.get, `stock/${product.id}`);
+  }catch(err){
+    yield put(fetchDataFailure(true));
+  }
+}
 
-//   if (availableStockResponse.data.quantity > currentQuantity) {
-//     yield put(addProductToCartSuccess(product));
-//   } else {
-//     yield put(addProductToCartFailure(product.id));
-//   }
-// }
-
-// export default all([
-//   takeLatest(ActionTypes.addProductToCartRequest, checkProductStock)
-// ]);
+export default all([
+  takeLatest(types.SEND_REQUEST, checkCity)
+])

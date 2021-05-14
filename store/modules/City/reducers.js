@@ -1,49 +1,38 @@
-import { types } from './types';
+import { Reducer } from 'redux';
+import producer from 'immer'
+
+import types from './types';
 
 const initialState = {
-  loading: false,
-  cities: [{name: 'oi', state: 'io'}],
+  cities: [],
   error: false,
 };
 
-const saveNewCity = (state, action) => {
-  if(state.cities.lenght === 3 ){
-    state.cities.unshift()
-  }
+const city = ( state = initialState, action ) => {
 
-  const updatedCities = {
-    ...state,
-    cities: action.payload.city
-  }
-
-  return updatedCities;
-}
-
-const cityReducer = ( state = initialState, action ) => {
-  switch (action.type) {
-    case types.SEND_REQUEST:
-      return {
-        ...state,
-        loading: true
+  return producer(state, draft => {
+    switch(action.type) {
+      case types.SEND_REQUEST_SUCCESS: {
+        const { city } = action.payload;
+        if(draft.cities.length === 3){
+          draft.cities.unshift();
+          draft.cities.push(city)
+        }
+        else {
+          draft.cities.push(city)
+        }
+        draft.error = false;
+        break;
       }
 
-    case types.SEND_REQUEST_SUCCESS:
-      return saveNewCity(state,action)
-      // return {
-      //   ...state,
-      //   loading: false,
-      //   cities: action.payload,
-      //   error: false
-      // }
-
-    case types.SEND_REQUEST_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        cities: [],
-        error: action.error
+      case types.SEND_REQUEST_FAILURE: {
+        const { error } = action.payload;
+        draft.error = error;
+        break;
       }
-  } 
+
+    } 
+  })
 }
 
-export default cityReducer
+export default city;
