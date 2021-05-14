@@ -1,19 +1,17 @@
-import React from 'react';
+// import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-//Config Redux
 import { Provider } from 'react-redux';
 import store from './store';
 
-//Config Rotas
 import Routes from './routes/routes'
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <NavigationContainer>
+    <NavigationContainer>
+      {/* <Provider store={store}> */}
         <Routes />
-      </NavigationContainer>
-    </Provider>
+      {/* </Provider> */}
+    </NavigationContainer>
   );
 }

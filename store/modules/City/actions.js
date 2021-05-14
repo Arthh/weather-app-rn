@@ -7,9 +7,9 @@ export function fetchData(city){
   }
 }
 
-export const fetchDataSucess = (cities) => {
+export const fetchDataSuccess = (cities) => {
   return {
-    type: types.SEND_REQUEST_SUCESS,
+    type: types.SEND_REQUEST_SUCCESS,
     payload: cities
   }
 }

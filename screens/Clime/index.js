@@ -11,13 +11,19 @@ import WeatherInfo from '../../components/WeatherInfo';
 import UnitsPicker from '../../components/UnitsPicker';
 import ReloadIcon from '../../components/ReloadIcon';
 import WeatherDetails from '../../components/WeatherDetails';
+import { useDispatch } from 'react-redux';
 
 export default function Home({ route }) {
   const [errorMessage, setErrorMessage] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
   const [unitsSystem, setUnitsSystem] = useState('metric')
+  const dispatch = useDispatch();
 
   const { city } = route.params;
+
+  useEffect(() => {
+    city ? loadWithCityName() : loadWithPosition()
+  },[unitsSystem])
 
   const loadWithCityName = async () => {
     setCurrentWeather(null)
@@ -67,11 +73,6 @@ export default function Home({ route }) {
       setErrorMessage(err.message)
     }
   }
-
-  useEffect(() => {
-    city ? loadWithCityName() : loadWithPosition()
-
-  },[unitsSystem])
 
   if(currentWeather){
     return (

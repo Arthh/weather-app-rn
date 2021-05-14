@@ -2,9 +2,22 @@ import { types } from './types';
 
 const initialState = {
   loading: false,
-  cities: [],
+  cities: [{name: 'oi', state: 'io'}],
   error: false,
 };
+
+const saveNewCity = (state, action) => {
+  if(state.cities.lenght === 3 ){
+    state.cities.unshift()
+  }
+
+  const updatedCities = {
+    ...state,
+    cities: action.payload.city
+  }
+
+  return updatedCities;
+}
 
 const cityReducer = ( state = initialState, action ) => {
   switch (action.type) {
@@ -14,13 +27,14 @@ const cityReducer = ( state = initialState, action ) => {
         loading: true
       }
 
-    case types.SEND_REQUEST_SUCESS:
-      return {
-        ...state,
-        loading: false,
-        cities: action.payload,
-        error: false
-      }
+    case types.SEND_REQUEST_SUCCESS:
+      return saveNewCity(state,action)
+      // return {
+      //   ...state,
+      //   loading: false,
+      //   cities: action.payload,
+      //   error: false
+      // }
 
     case types.SEND_REQUEST_FAILURE:
       return {
@@ -29,7 +43,7 @@ const cityReducer = ( state = initialState, action ) => {
         cities: [],
         error: action.error
       }
-  }
+  } 
 }
 
 export default cityReducer
