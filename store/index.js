@@ -1,15 +1,11 @@
-import { createStore,applyMiddleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 
-import RootReducer from './modules/rootReducer';
+import citiesSlice from './cities-slice';
 
-import rootSaga from './modules/rootSaga';
-
-import createSagaMiddleware from 'redux-saga';
-
-const sagaMiddleware = createSagaMiddleware();
-
-const store = createStore(RootReducer, applyMiddleware(sagaMiddleware));
-
-sagaMiddleware.run(rootSaga);
+const store = configureStore({
+  reducer: {
+    city: citiesSlice.reducer
+  }
+})
 
 export default store;

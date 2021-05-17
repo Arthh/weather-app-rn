@@ -1,20 +1,21 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
 import { useSelector } from 'react-redux';
 
 import ListOneCities from '../ListOneCities';
 
 const ListAllCities = () => {
-  const cities = useSelector(state => state.city.cities);
-  console.log(cities)
+  const cities = useSelector(state => state.city.cities)
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.containerText}> Previous Searches </Text>
-      <ListOneCities />
-      <ListOneCities />
-      <ListOneCities />
-    </View>
+      {cities && cities.map(city => (
+        <ListOneCities city={city} key={city.name} />
+      ))}
+      </View>
   );
 }
 

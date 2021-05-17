@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const ListOneCities = () => {
+const ListOneCities = ({ city }) => {
   return (
   <TouchableOpacity>
     <View style={styles.container}>
       <View style={styles.infoCity}>
-        <Text>Rio De Janeiro</Text>
-        <Text>RJ, Brazil</Text>
+        <Text> {city.name} </Text>
+        <Text> {city.state_code} </Text>
       </View>
 
       <Text> -- </Text>
