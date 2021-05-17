@@ -1,16 +1,32 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
-const ListOneCities = ({ city }) => {
+import { colors } from '../../utils/index';
+
+const ListOneCities = ({ city, navigation }) => {
+
+  const pushToClime = () => {
+    navigation.navigate('Clime', {
+      lat: city.lat,
+      lng: city.lng
+    })
+  }
+
   return (
-  <TouchableOpacity>
+  <TouchableOpacity onPress={pushToClime} >
     <View style={styles.container}>
       <View style={styles.infoCity}>
         <Text> {city.name} </Text>
-        <Text> {city.state_code} </Text>
+        <Text> {city.state_code} - {city.country} </Text>
       </View>
 
-      <Text> -- </Text>
+      <AntDesign 
+      name="arrowright"
+      size={30}
+      color={colors.PRIMARY_COLOR}
+      />
+
     </View>
   </TouchableOpacity>
   );

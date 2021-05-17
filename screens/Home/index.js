@@ -12,7 +12,7 @@ const Home = ({ navigation }) => {
       <StatusBar style="auto" />
       <Text style={styles.screenTitle} > Search </Text>
       <SearchArea navigation={navigation} />
-      <ListAllCities />
+      <ListAllCities navigation={navigation} />
     </View>
   );
 }

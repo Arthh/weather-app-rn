@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity   } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react/cjs/react.development';
+import * as Location from 'expo-location';
 
 const SearchArea = ({ navigation }) => {
   const [city, setCity] = useState();
@@ -12,14 +13,29 @@ const SearchArea = ({ navigation }) => {
       return alert('Escreva o nome da cidade!')
     }
     navigation.navigate('Clime', {
-      city: city
+      citySearch: city
     })
   }
 
-  const navigateToClimeWithLocation = () => {
-    navigation.navigate('Clime', {
-      city: city
-    })
+  const navigateToClimeWithLocation = async () => {
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      
+      if(status !== 'granted'){
+        alert('Acess to localtion is needed to run the app!');
+        return
+      }
+      const location = await Location.getCurrentPositionAsync();
+      const { latitude, longitude } = location.coords;
+
+      navigation.navigate('Clime', {
+        lat: latitude,
+        lng: longitude
+      })
+
+    }catch(err){
+      alert(err.message)
+    }
   }
 
   return (

@@ -21,26 +21,33 @@ export default function Home({ route }) {
   const [unitsSystem, setUnitsSystem] = useState('metric')
   const dispatch = useDispatch(); 
 
-  const { city } = route.params;
+
+  const { citySearch, lat, lng } = route.params;
+  console.log( citySearch, lat, lng)
 
   useEffect(() => {
-    city ? loadWithCityName() : loadWithPosition()
+    citySearch ? loadWithCityName() : loadWithPosition()
   },[unitsSystem])
 
-  const getCityInfos = async () => {
+  const getCityInfos = async (cityName) => {
     try{
-    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?key=e85809527b0341b18712ec1bacc3aab9&q=${city}`);
+    const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?key=e85809527b0341b18712ec1bacc3aab9&q=${cityName}`);
     const result = await response.json();
 
     if(response.ok){
       const {
         results: [{
-          components: { state_code, country },
+          components: { state_code , country },
           geometry: {lat, lng}
         }]
       } = result
 
-      return ({city, state_code, country, lat, lng})
+
+      if(!state_code){
+        return
+      }
+
+      return ({city: cityName, state_code, country, lat, lng})
     }
 
     } catch(err) {
@@ -53,9 +60,14 @@ export default function Home({ route }) {
     setErrorMessage(null)
     
     try{
-      const cityData =  await getCityInfos()
 
-      const WEATHER_API = `${WEATHER_BASE_URL}q=${city}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
+      const cityData =  await getCityInfos(citySearch)
+
+      if(!cityData){
+        return setErrorMessage('Não encontrada!');
+      }
+
+      const WEATHER_API = `${WEATHER_BASE_URL}q=${cityData.city}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
    
       const response = await fetch(WEATHER_API);
       const result = await response.json();
@@ -81,24 +93,24 @@ export default function Home({ route }) {
   const loadWithPosition = async () => {
     setCurrentWeather(null)
     setErrorMessage(null)
-
+    console.log(lat,lng)
     try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      
-      if(status !== 'granted'){
-        setErrorMessage('Acess to localtion is needed to run the app!');
-        return
-      }
-      const location = await Location.getCurrentPositionAsync();
-      const { latitude, longitude } = location.coords;
-
-      const WEATHER_API = `${WEATHER_BASE_URL}lat=${latitude}&lon=${longitude}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
+      const WEATHER_API = `${WEATHER_BASE_URL}lat=${lat}&lon=${lng}&units=${unitsSystem}&appid=${WEATHER_API_KEY}`;
 
       const response = await fetch(WEATHER_API);
       const result = await response.json();
 
       if(response.ok){
         setCurrentWeather(result)
+        const cityData =  await getCityInfos(result.name);
+        dispatch(CitiesActions.addCity({
+          name: cityData.city,
+          state_code: cityData.state_code,
+          country: cityData.country,
+          lat: cityData.lat,
+          lng: cityData.lng
+        }))
+
       } else {
         setErrorMessage(result.message)
       }
@@ -115,7 +127,7 @@ export default function Home({ route }) {
         <StatusBar style="auto" />
         <View style={styles.main}>
           <UnitsPicker unitsSystem={unitsSystem} setUnitsSystem={setUnitsSystem} />
-          <ReloadIcon load={loadWithPosition} />
+          <ReloadIcon load={citySearch ? loadWithCityName  : loadWithPosition} />
           <WeatherInfo currentWeather={currentWeather} />
         </View>
         <WeatherDetails currentWeather={currentWeather} unitsSystem={unitsSystem} />
